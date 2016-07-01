@@ -1,16 +1,13 @@
-## 
-getAcFunPage
+## getAcFunPage
 
 ----
 
-## 
-Intro
+## Intro
 
 ####  
 Get Acfun Page on "The Hottest Today"
 
-## 
-Usage
+## Usage
 
 ```go
 go run main.go
