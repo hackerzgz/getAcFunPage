@@ -60,6 +60,7 @@ func findPageInfo(pageID, content string) PageInfo {
 	matches := ptnPageInfo.FindStringSubmatch(content)
 
 	// fmt.Println("PageInfo", matches)
+	// Warning: Info in http://www.acfun.tv/content_view.aspx?contentId=2867906&channelId=110
 	return PageInfo{
 		pageID,
 		utils.StrToInt64(matches[1]),
