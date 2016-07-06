@@ -44,7 +44,7 @@ func main() {
 
 	fmt.Println("=== IndexItem Match Done. ===")
 	for i, item := range index {
-		fmt.Printf("\n[%d] ==> Title:【%s】 || onlooker: [%d] || link: [%s] || Published: %s\n", i, item.title, item.pageinfo.Onlooker, item.url, item.pageinfo.Published)
+		fmt.Printf("\n[%d] ==> Title:【%s】 || Onlooker: [%d] || Comment: [%d] || Banana: [%d] || Link: [%s]\n", i, item.title, item.pageinfo.Onlooker, item.pageinfo.Comments, item.pageinfo.Banana, item.url)
 	}
 }
 
