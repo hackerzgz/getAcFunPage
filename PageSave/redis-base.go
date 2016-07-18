@@ -14,6 +14,10 @@ type config struct {
 	RedisDB: "getAcfunPage"
 }
 
+var (
+    RedisClient *redis.Pool
+)
+
 
 // initRedis Connect RedisDB and Make it available.
 func initRedis(host string) *redis.Pool {  
@@ -36,7 +40,19 @@ func initRedis(host string) *redis.Pool {
             return c, err  
         },  
     }  
-} 
+}
+
+// GetRedisClient return an available Redis Client.
+/* Usage:
+ *      GetRedisClient()
+ *      // Get a Conn from Pool
+ *      rc := RedisClient.Get()
+ *      // Return Conn into Pool When you are Done.
+ *      defer rc.Close() 
+ */
+func GetRedisClient() {
+    RedisClient = initRedis(":6379")
+}
 
 
 func Zadd(pageId string, onLooker, comments, banana int64)(bool, error) {
