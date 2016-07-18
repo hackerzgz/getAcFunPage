@@ -7,6 +7,11 @@
 ####  
 Get Acfun Page on "The Hottest Today"
 
+## Testing
+```go
+go test getAcFunPage/PageSave
+```
+
 ## Usage
 
 ```shell
