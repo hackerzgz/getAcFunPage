@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"regexp"
+
+	PageInfo "getAcFunPage/PageInfo"
 )
 
 // Author: HackerZ
@@ -15,20 +17,22 @@ import (
  */
 
 var (
-	ptnIndexItem = regexp.MustCompile(`<div class="item "><a href="(/a/ac[0-9]{7,})" target="_blank" data-aid="([0-9]{7,})" title="(.{10,35})" class="title">.{10,35}</a></div>`)
+	acfunPageRoot = "http://www.acfun.tv/v/list110/index.htm"
+	ptnIndexItem  = regexp.MustCompile(`<div class="item "><a href="(/a/ac[0-9]{7,})" target="_blank" data-aid="([0-9]{7,})" title="(.{10,35})" class="title">.{10,35}</a></div>`)
 )
 
 // IndexItem Item on "The Hottest Today"
 type IndexItem struct {
-	url    string
-	title  string
-	dataid string
+	url      string
+	title    string
+	dataid   string
+	pageinfo PageInfo.PageInfo
 }
 
 func main() {
 	// Get url Content.
 	fmt.Println("=== Get Index... ===")
-	raw, statusCode := Get("http://www.acfun.tv/v/list110/index.htm")
+	raw, statusCode := Get(acfunPageRoot)
 	fmt.Println("statusCode --> ", statusCode)
 	if statusCode != "200 OK" {
 		fmt.Println("err --> False to Get Web Content.Please Check out Your URL!")
@@ -40,7 +44,7 @@ func main() {
 
 	fmt.Println("=== IndexItem Match Done. ===")
 	for i, item := range index {
-		fmt.Printf("\n[%d] ==> Title 【%s】 link ==> [%s]\n", i, item.title, item.url)
+		fmt.Printf("\n[%d] ==> Title:【%s】 || Onlooker: [%d] || Comment: [%d] || Banana: [%d] || Link: [%s]\n", i, item.title, item.pageinfo.Onlooker, item.pageinfo.Comments, item.pageinfo.Banana, item.url)
 	}
 }
 
@@ -49,7 +53,7 @@ func Get(url string) (content, statusCode string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		statusCode = "-1"
-		fmt.Println("err --> ", err.Error())
+		fmt.Println("Get The \"Hottest\" Page Error --> ", err.Error())
 		return
 	}
 	defer resp.Body.Close()
@@ -57,7 +61,7 @@ func Get(url string) (content, statusCode string) {
 	bys, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		statusCode = "-2"
-		fmt.Println("err --> ", err.Error())
+		fmt.Println("Get The \"Hottest\" Page Error --> ", err.Error())
 		return
 	}
 	statusCode = resp.Status
@@ -68,10 +72,11 @@ func Get(url string) (content, statusCode string) {
 // FindIndexItem Find IndexItem Which "The Hottest Today".
 func FindIndexItem(content string) (index []IndexItem, err error) {
 	matches := ptnIndexItem.FindAllStringSubmatch(content, -1)
-	// fmt.Println("matches -->", matches)
+
 	index = make([]IndexItem, len(matches))
 	for i, item := range matches {
-		index[i] = IndexItem{"http://www.acfun.tv" + item[1], item[3], item[2]}
+		pageInfo := PageInfo.GetPageInfo(item[1])
+		index[i] = IndexItem{"http://www.acfun.tv" + item[1], item[3], item[2], pageInfo}
 	}
 	return
 }
