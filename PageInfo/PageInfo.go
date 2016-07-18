@@ -2,11 +2,12 @@ package PageInfo
 
 import (
 	"fmt"
-	"getAcFunPage/utils"
 	"io/ioutil"
 	"net/http"
 	"regexp"
 	"strings"
+
+	"getAcFunPage/utils"
 )
 
 // Author: HackerZ
