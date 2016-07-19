@@ -48,7 +48,3 @@ func initRedis(host string) *redis.Pool {
 func GetRedisClient() {
 	RedisClient = initRedis(":6379")
 }
-
-// func Zadd(pageId string, onLooker, comments, banana int64) (bool, error) {
-// 	return client.Do("ZADD")
-// }
