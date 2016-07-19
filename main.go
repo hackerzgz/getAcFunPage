@@ -7,6 +7,7 @@ import (
 	"regexp"
 
 	PageInfo "getAcFunPage/PageInfo"
+	PageSave "getAcFunPage/PageSave"
 )
 
 // Author: HackerZ
@@ -29,6 +30,10 @@ type IndexItem struct {
 	pageinfo PageInfo.PageInfo
 }
 
+/*
+ * MAIN FUNCTION
+ * AUTHOR : HACKERZ
+ */
 func main() {
 	// Get url Content.
 	fmt.Println("=== Get Index... ===")
@@ -42,13 +47,24 @@ func main() {
 	// Find IndexItem.
 	index, _ := FindIndexItem(raw)
 
-	fmt.Println("=== IndexItem Match Done. ===")
-	for i, item := range index {
-		fmt.Printf("\n[%d] ==> Title:【%s】 || Onlooker: [%d] || Comment: [%d] || Banana: [%d] || Link: [%s]\n", i, item.title, item.pageinfo.Onlooker, item.pageinfo.Comments, item.pageinfo.Banana, item.url)
+	fmt.Println("=== IndexItem Match Done ===")
+	// for i, item := range index {
+	// 	fmt.Printf("\nPageID ==> [%s] || [%d] ==> Title:【%s】 || Onlooker: [%d] || Comment: [%d] || Banana: [%d] || Link: [%s]\n", item.pageinfo.PageID, i, item.title, item.pageinfo.Onlooker, item.pageinfo.Comments, item.pageinfo.Banana, item.url)
+	// }
+
+	fmt.Println("=== Save Page Info 2 Redis ===")
+	// Save Page Info to Redis.
+	for _, item := range index {
+		PageSave.HMset("ac"+item.pageinfo.PageID, item.title, item.url, item.pageinfo.Onlooker, item.pageinfo.Comments, item.pageinfo.Banana)
 	}
 }
 
-// Get Web Content.
+/*
+ * Get Web Content.
+ * @param url string
+ * @return content
+ * @return statusCode
+ */
 func Get(url string) (content, statusCode string) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -69,7 +85,12 @@ func Get(url string) (content, statusCode string) {
 	return
 }
 
-// FindIndexItem Find IndexItem Which "The Hottest Today".
+/*
+ * FindIndexItem Find IndexItem Which "The Hottest Today".
+ * @param content string
+ * @return index
+ * @return err
+ */
 func FindIndexItem(content string) (index []IndexItem, err error) {
 	matches := ptnIndexItem.FindAllStringSubmatch(content, -1)
 
