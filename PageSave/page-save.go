@@ -76,12 +76,12 @@ func Hdel(pageId string) (int64, error) {
 /* Keys use KEYS to find acfun pageId
  * @return 	pageId_index, err
  */
-func Keys() ([]string, error) {
+func Keys(keys_arg string) ([]string, error) {
 	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
 
-	pageId_list, err := redis.Strings(rc.Do("KEYS", "ac29*"))
+	pageId_list, err := redis.Strings(rc.Do("KEYS", keys_arg))
 	if err != nil {
 		return []string{""}, err
 	}
