@@ -16,6 +16,19 @@ func TestHset(t *testing.T) {
 	fmt.Println("=== Testing HSET Done ===")
 }
 
+func TestKeys(t *testing.T) {
+	fmt.Println("=== Testing KEYS Start ===")
+
+	index, err := Keys()
+	fmt.Println("index-->", index)
+	if err != nil || len(index) != 1 {
+		t.Errorf("err --> %s", err.Error())
+	}
+
+	fmt.Println("=== Testing KEYS Done ===")
+
+}
+
 func TestHdel(t *testing.T) {
 	fmt.Println("=== Testing HDEL Start ===")
 	n, err := Hdel("ac2905884")
