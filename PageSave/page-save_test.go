@@ -19,9 +19,9 @@ func TestHset(t *testing.T) {
 func TestKeys(t *testing.T) {
 	fmt.Println("=== Testing KEYS Start ===")
 
-	index, err := Keys()
-	fmt.Println("index-->", index)
-	if err != nil || len(index) != 1 {
+	pageId_index, err := Keys()
+	fmt.Println("index-->", pageId_index)
+	if err != nil || len(pageId_index) != 1 {
 		t.Errorf("err --> %s", err.Error())
 	}
 
