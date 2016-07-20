@@ -14,7 +14,7 @@ import (
  * @param banana
  * @return size_length, error
  */
-func HMset(pageId, title, url string, onLooker, comments, banana int) (string, error) {
+func HMset(pageId, title, url string, onLooker, comments, banana int64) (string, error) {
 	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
