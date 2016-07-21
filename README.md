@@ -12,6 +12,11 @@ Get Acfun Page on "The Hottest Today"
 go test getAcFunPage/PageSave
 ```
 
+## Dependence
+```shell
+$ go get github.com/emilsjolander/goson
+```
+
 ## Usage
 
 ```shell

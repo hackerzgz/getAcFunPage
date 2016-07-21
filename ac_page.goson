@@ -1,0 +1,8 @@
+page: {
+    page-id: IndexItem.dataid
+    url: IndexItem.url
+    title: IndexItem.title
+    onlooker: IndexItem.PageInfo.Onlooker
+    comments: IndexItem.PageInfo.Comments
+    banana: IndexItem.PageInfo.Banana
+}
