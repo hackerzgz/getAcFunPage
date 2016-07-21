@@ -22,7 +22,16 @@ var (
 	ptnIndexItem  = regexp.MustCompile(`<div class="item "><a href="(/a/ac[0-9]{7,})" target="_blank" data-aid="([0-9]{7,})" title="(.{10,35})" class="title">.{10,35}</a></div>`)
 )
 
-// IndexItem Item on "The Hottest Today"
+/* IndexItem Item on "The Hottest Today".
+ * Usage:
+ * url:		 			"http://www.acfun.tv/a/ac2907308"
+ * title:	 			"JUST A STRING"
+ * dataid:				"2907308"
+ * pageinfo.PageID:   	"2907308"
+ * pageinfo.OnLooker: 	25781
+ * pageinfo.Comments: 	524
+ * pageinfo.Banana: 	2
+ */
 type IndexItem struct {
 	url      string
 	title    string
