@@ -24,19 +24,19 @@ var (
 
 /* IndexItem Item on "The Hottest Today".
  * Usage:
- * url:		 			"http://www.acfun.tv/a/ac2907308"
- * title:	 			"JUST A STRING"
- * dataid:				"2907308"
+ * Url:		 			"http://www.acfun.tv/a/ac2907308"
+ * Title:	 			"JUST A STRING"
+ * Dataid:				"2907308"
  * pageinfo.PageID:   	"2907308"
  * pageinfo.OnLooker: 	25781
  * pageinfo.Comments: 	524
  * pageinfo.Banana: 	2
  */
 type IndexItem struct {
-	url      string
-	title    string
-	dataid   string
-	pageinfo PageInfo.PageInfo
+	Url      string
+	Title    string
+	Dataid   string
+	Pageinfo PageInfo.PageInfo
 }
 
 /*
@@ -64,7 +64,7 @@ func main() {
 	fmt.Println("=== Save Page Info 2 Redis ===")
 	// Save Page Info to Redis.
 	for _, item := range index {
-		PageSave.HMset("ac"+item.pageinfo.PageID, item.title, item.url, item.pageinfo.Onlooker, item.pageinfo.Comments, item.pageinfo.Banana)
+		PageSave.HMset("ac"+item.pageinfo.PageID, item.Title, item.Url, item.Pageinfo.Onlooker, item.Pageinfo.Comments, item.Pageinfo.Banana)
 	}
 }
 

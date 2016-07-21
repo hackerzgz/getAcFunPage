@@ -30,8 +30,8 @@ func TestHgetall(t *testing.T) {
 		t.Errorf("Testing HGETALL error --> %s", err.Error())
 	}
 
-	if page.title != "TESTING HSET TITLE" || page.url != "TESTING HSET URL" || page.pageinfo.Onlooker != 35844 || page.pageinfo.Comments != 1454 || page.pageinfo.Banana != 2 {
-		t.Errorf("%s\n%s\n%d\n%d\n%d\n", page.title, page.url, page.pageinfo.Onlooker, page.pageinfo.Comments, page.pageinfo.Banana)
+	if page.Title != "TESTING HSET TITLE" || page.Url != "TESTING HSET URL" || page.Pageinfo.Onlooker != 35844 || page.Pageinfo.Comments != 1454 || page.Pageinfo.Banana != 2 {
+		t.Errorf("%s\n%s\n%d\n%d\n%d\n", page.Title, page.Url, page.Pageinfo.Onlooker, page.Pageinfo.Comments, page.Pageinfo.Banana)
 		t.Error("Page information is not correct!")
 	}
 

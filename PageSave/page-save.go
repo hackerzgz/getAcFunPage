@@ -12,16 +12,16 @@ import (
  * url:		 			"http://www.acfun.tv/a/ac2907308"
  * title:	 			"JUST A STRING"
  * dataid:				"2907308"
- * pageinfo.PageID:   	"2907308"
- * pageinfo.OnLooker: 	25781
- * pageinfo.Comments: 	524
- * pageinfo.Banana: 	2
+ * Pageinfo.PageID:   	"2907308"
+ * Pageinfo.OnLooker: 	25781
+ * Pageinfo.Comments: 	524
+ * Pageinfo.Banana: 	2
  */
 type IndexItem struct {
-	url      string
-	title    string
-	dataid   string
-	pageinfo PageInfo.PageInfo
+	Url      string
+	Title    string
+	Dataid   string
+	Pageinfo PageInfo.PageInfo
 }
 
 /* HMset use HMSET to save PageInfo.
@@ -106,19 +106,19 @@ func Hgetall(pageId string) (IndexItem, error) {
 	for k, v := range pageId_index {
 		switch k {
 		case "title":
-			indexItem.title = v
+			indexItem.Title = v
 		case "url":
-			indexItem.url = v
+			indexItem.Url = v
 		case "onLooker":
-			indexItem.pageinfo.Onlooker = utils.StrToInt64(v)
+			indexItem.Pageinfo.Onlooker = utils.StrToInt64(v)
 		case "comments":
-			indexItem.pageinfo.Comments = utils.StrToInt64(v)
+			indexItem.Pageinfo.Comments = utils.StrToInt64(v)
 		case "banana":
-			indexItem.pageinfo.Banana = utils.StrToInt64(v)
+			indexItem.Pageinfo.Banana = utils.StrToInt64(v)
 		default:
 		}
 	}
-	indexItem.pageinfo.PageID = utils.AcIdToPageId(pageId)
-	indexItem.dataid = utils.AcIdToPageId(pageId)
+	indexItem.Pageinfo.PageID = utils.AcIdToPageId(pageId)
+	indexItem.Dataid = utils.AcIdToPageId(pageId)
 	return indexItem, nil
 }
