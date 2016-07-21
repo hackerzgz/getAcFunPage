@@ -1,0 +1,8 @@
+pages: page in IndexItem {
+	page-id: page.Dataid
+    url: page.Url
+    title: page.Title
+    onlooker: page.Pageinfo.Onlooker
+    comments: page.Pageinfo.Comments
+    banana: page.Pageinfo.Banana
+}

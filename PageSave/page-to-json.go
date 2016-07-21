@@ -15,3 +15,13 @@ func Page2JSON(indexItem IndexItem) (string, error) {
 
 	return string(itemJSON), nil
 }
+
+func Pages2JSON(indexList []IndexItem) (string, error) {
+	itemJSON, err := goson.Render("../ac_pages", goson.Args{"IndexItem": indexList})
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(itemJSON), nil
+}
