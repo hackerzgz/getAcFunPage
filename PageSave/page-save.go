@@ -7,6 +7,9 @@ import (
 	utils "getAcFunPage/utils"
 )
 
+// Author: HackerZ
+// Time  : 2016/7/19 14:27
+
 /* IndexItem Item on "The Hottest Today".
  * Usage:
  * url:		 			"http://www.acfun.tv/a/ac2907308"

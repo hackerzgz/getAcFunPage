@@ -46,7 +46,7 @@ type IndexItem struct {
 func main() {
 	// Get url Content.
 	fmt.Println("=== Get Index... ===")
-	raw, statusCode := Get(acfunPageRoot)
+	raw, statusCode := GetPageContent(acfunPageRoot)
 	fmt.Println("statusCode --> ", statusCode)
 	if statusCode != "200 OK" {
 		fmt.Println("err --> False to Get Web Content.Please Check out Your URL!")
@@ -57,24 +57,22 @@ func main() {
 	index, _ := FindIndexItem(raw)
 
 	fmt.Println("=== IndexItem Match Done ===")
-	// for i, item := range index {
-	// 	fmt.Printf("\nPageID ==> [%s] || [%d] ==> Title:【%s】 || Onlooker: [%d] || Comment: [%d] || Banana: [%d] || Link: [%s]\n", item.pageinfo.PageID, i, item.title, item.pageinfo.Onlooker, item.pageinfo.Comments, item.pageinfo.Banana, item.url)
-	// }
 
-	fmt.Println("=== Save Page Info 2 Redis ===")
 	// Save Page Info to Redis.
 	for _, item := range index {
 		PageSave.HMset("ac"+item.pageinfo.PageID, item.Title, item.Url, item.Pageinfo.Onlooker, item.Pageinfo.Comments, item.Pageinfo.Banana)
 	}
+
+	fmt.Println("=== Save Page Info 2 Redis Done ===")
+
 }
 
-/*
- * Get Web Content.
+/* GetPageContent Get Acfun Page Content.
  * @param url string
  * @return content
  * @return statusCode
  */
-func Get(url string) (content, statusCode string) {
+func GetPageContent(url string) (content, statusCode string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		statusCode = "-1"
@@ -94,8 +92,7 @@ func Get(url string) (content, statusCode string) {
 	return
 }
 
-/*
- * FindIndexItem Find IndexItem Which "The Hottest Today".
+/* FindIndexItem Find IndexItem Which "The Hottest Today".
  * @param content string
  * @return index
  * @return err
