@@ -44,6 +44,17 @@ type IndexItem struct {
  * AUTHOR : HACKERZ
  */
 func main() {
+
+	GetPageAndSave()
+
+	GetPageAndJSON()
+
+}
+
+/* GetPageAndSave
+ * Get AcFun Page And Save them into Redis.
+ */
+func GetPageAndSave() {
 	// Get url Content.
 	fmt.Println("=== Get Index... ===")
 	raw, statusCode := GetPageContent(acfunPageRoot)
@@ -64,13 +75,18 @@ func main() {
 	}
 
 	fmt.Println("=== Save Page Info 2 Redis Done ===")
+}
 
+/* GetPageAndJSON
+ * Get Acfun Page List from Redis
+ * and trans them to JSON
+ */
+func GetPageAndJSON() (pageJSON string) {
 	// Get Page Info from Redis.
 	keys, err := PageSave.Keys("ac*")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("keys --> ", keys)
 
 	// Get PageList base on keys.
 	var pageList []PageSave.IndexItem = make([]PageSave.IndexItem, 9)
@@ -84,11 +100,12 @@ func main() {
 	fmt.Println("pageList --> ", pageList)
 
 	// Make Pages trans to JSON.
-	pageJSON, err := PageSave.Page2JSON(pageList, "./ac_pages")
+	pageJSON, err = PageSave.Page2JSON(pageList, "./ac_pages")
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("JSON --> ", pageJSON)
+	return
 }
 
 /* GetPageContent Get Acfun Page Content.

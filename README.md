@@ -32,3 +32,9 @@ go run main.go
 
 1. I make a big mistake when I declare some variable in struct IndexItem use begin with lowercase, That was suck! When I use goson to reflex IndexItem to JSON, Golang throw out **"reflect.Value.Interface: cannot return value obtained from unexported field or method"** error. It kill me a lot of time to change uppercase in every file.
 
+2. **Same struct** must be a package to import OR It will show you:
+
+> cannot use pageList (type []IndexItem) as type []PageSave.IndexItem in argument...
+
+3. **References to static files** is based on the relative path calls the function file.
+
