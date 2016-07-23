@@ -60,11 +60,35 @@ func main() {
 
 	// Save Page Info to Redis.
 	for _, item := range index {
-		PageSave.HMset("ac"+item.pageinfo.PageID, item.Title, item.Url, item.Pageinfo.Onlooker, item.Pageinfo.Comments, item.Pageinfo.Banana)
+		PageSave.HMset("ac"+item.Pageinfo.PageID, item.Title, item.Url, item.Pageinfo.Onlooker, item.Pageinfo.Comments, item.Pageinfo.Banana)
 	}
 
 	fmt.Println("=== Save Page Info 2 Redis Done ===")
 
+	// Get Page Info from Redis.
+	keys, err := PageSave.Keys("ac*")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("keys --> ", keys)
+
+	// Get PageList base on keys.
+	var pageList []PageSave.IndexItem = make([]PageSave.IndexItem, 9)
+	for k, v := range keys {
+		pifr, err := PageSave.Hgetall(v)
+		if err != nil {
+			panic(err)
+		}
+		pageList[k] = pifr
+	}
+	fmt.Println("pageList --> ", pageList)
+
+	// Make Pages trans to JSON.
+	pageJSON, err := PageSave.Page2JSON(pageList, "./ac_pages")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("JSON --> ", pageJSON)
 }
 
 /* GetPageContent Get Acfun Page Content.

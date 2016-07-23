@@ -121,7 +121,8 @@ func Hgetall(pageId string) (IndexItem, error) {
 		default:
 		}
 	}
-	indexItem.Pageinfo.PageID = utils.AcIdToPageId(pageId)
+	indexItem.Pageinfo.PageID = "ac"
+	indexItem.Pageinfo.PageID += utils.AcIdToPageId(pageId)
 	indexItem.Dataid = utils.AcIdToPageId(pageId)
 	return indexItem, nil
 }
