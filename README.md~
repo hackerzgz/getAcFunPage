@@ -43,7 +43,3 @@ go run main.go
 > Just log the requests. You will realize that your browser also requests /favicon.ico.
 > See https://en.wikipedia.org/wiki/Favicon for more information.
 
-## Demo
-
-[Demo](http://123.207.0.81:9001/)
-
