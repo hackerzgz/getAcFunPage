@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"regexp"
+	"sync"
+	"time"
 
 	PageInfo "getAcFunPage/PageInfo"
 	PageSave "getAcFunPage/PageSave"
@@ -20,6 +23,7 @@ import (
 var (
 	acfunPageRoot = "http://www.acfun.tv/v/list110/index.htm"
 	ptnIndexItem  = regexp.MustCompile(`<div class="item "><a href="(/a/ac[0-9]{7,})" target="_blank" data-aid="([0-9]{7,})" title="(.{10,35})" class="title">.{10,35}</a></div>`)
+	wg            sync.WaitGroup
 )
 
 /* IndexItem Item on "The Hottest Today".
@@ -45,10 +49,34 @@ type IndexItem struct {
  */
 func main() {
 
-	GetPageAndSave()
+	wg.Add(1)
+	// Wait a Second to prevent Jump over a Shorter time.
+	savePageTime := time.NewTimer(time.Second)
 
-	GetPageAndJSON()
+	go func() {
+		for {
+			select {
+			case <-savePageTime.C:
+				// wg.Done() when GetPageAndSave() Done
+				GetPageAndSave()
+				savePageTime.Reset(30 * time.Minute)
+			}
+		}
+	}()
 
+	// Wait for GetPageAndSave() Done.
+	wg.Wait()
+
+	http.HandleFunc("/", HandleGetResp)
+	http.ListenAndServe(":9001", nil)
+
+}
+
+/* HandleGetResp
+ * Handle Get Response And Return JSON.
+ */
+func HandleGetResp(rw http.ResponseWriter, req *http.Request) {
+	io.WriteString(rw, GetPageAndJSON())
 }
 
 /* GetPageAndSave
@@ -75,6 +103,9 @@ func GetPageAndSave() {
 	}
 
 	fmt.Println("=== Save Page Info 2 Redis Done ===")
+
+	// Save Page Info Done, Make Response available.
+	wg.Done()
 }
 
 /* GetPageAndJSON
@@ -97,14 +128,14 @@ func GetPageAndJSON() (pageJSON string) {
 		}
 		pageList[k] = pifr
 	}
-	fmt.Println("pageList --> ", pageList)
+	fmt.Println("=== Get PageList Done ===")
 
 	// Make Pages trans to JSON.
 	pageJSON, err = PageSave.Page2JSON(pageList, "./ac_pages")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("JSON --> ", pageJSON)
+	fmt.Println("=== JSON Trans Done ===")
 	return
 }
 
