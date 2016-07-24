@@ -67,8 +67,11 @@ func main() {
 	// Wait for GetPageAndSave() Done.
 	wg.Wait()
 
-	http.HandleFunc("/", HandleGetResp)
-	http.ListenAndServe(":9001", nil)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", HandleGetResp)
+	// solve brower requset favicon problem.
+	mux.HandleFunc("/favicon.ico", func(rw http.ResponseWriter, req *http.Request) {})
+	http.ListenAndServe(":9001", mux)
 
 }
 
