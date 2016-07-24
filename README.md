@@ -38,5 +38,5 @@ go run main.go
 
 3. **References to static files** is based on the relative path calls the function file.
 
-4. Now here is a problem which HandleGetResp() will Handle twice time.
+4. Now here is a problem which HandleGetResp() will call twice time in Brower. But in `curl http://localhost:9000` ,it call only once.
 
