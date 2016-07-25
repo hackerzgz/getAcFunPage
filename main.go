@@ -49,7 +49,6 @@ type IndexItem struct {
  */
 func main() {
 
-	wg.Add(1)
 	// Wait a Second to prevent Jump over a Shorter time.
 	savePageTime := time.NewTimer(time.Second)
 
@@ -57,6 +56,7 @@ func main() {
 		for {
 			select {
 			case <-savePageTime.C:
+				wg.Add(1)
 				// wg.Done() when GetPageAndSave() Done
 				GetPageAndSave()
 				savePageTime.Reset(30 * time.Minute)
