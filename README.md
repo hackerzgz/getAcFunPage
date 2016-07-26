@@ -47,9 +47,12 @@ go run main.go
 
 [Demo](http://123.207.0.81:9001/)
 
-## Banmark
+## Benchmark
 
-![WebBench -c 1000 -t 15](https://www.github.com/HackeZ/getAcFunPage/doc/)
+![WebBench -c 1000 -t 15](https://github.com/HackeZ/getAcFunPage/blob/master/doc/benchmark-c1k-t15.png)
 
 WebBench -c 1000 -t 15
 
+![WebBench -c 300 -t 60](https://github.com/HackeZ/getAcFunPage/blob/master/doc/benchmark-c300-t60.png)
+
+WebBench -c 300 -t 60
