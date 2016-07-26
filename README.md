@@ -65,7 +65,11 @@ created by net/http.(*Server).Serve
     /usr/local/go/src/net/http/server.go:2137 +0x44e
 ```
 when i use webbench in **client 300 and time 60s**.
-This Problem Slove When you set `ulimit -n 99999`. Because of Linux System file descriptors limit of your operating system(ubuntu defaults to 1024 which can be a problem) which is right the redis maxclients setting.
+This Problem Slove When you set `ulimit -n 99999` . 
+
+> Because of Linux System file descriptors limit of your operating system(ubuntu defaults to 1024 which can be a problem) which is right the redis maxclients setting.
+
+> [-- by Stack Overflow](http://stackoverflow.com/questions/19971968/go-golang-redis-too-many-open-files-error)
 
 6. Same in 5. It will log:
 ```shell
