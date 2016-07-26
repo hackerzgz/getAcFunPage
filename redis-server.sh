@@ -5,16 +5,17 @@ username=`whoami`
 echo "Hello $username!"
 echo "Welcome to use Redis."
 
-# Check the Running Process.
 
+# Check the :6379 Port.
+# p=6379
+# i1=`/usr/bin/nmap -sS 127.0.0.1 -p $p | grep $p | awk '{printf $2}'`
+# if [[ "$i1"=="open" ]]; then
+# 	# Redis Server Running.
+# 	echo ":6379 Port has been running. -- $i1"
+# 	exit
+# fi
 
-
-# Find redis-conf
-redis_path=`whereis redis`
-redis_path=${redis_path#redis: }
-redis_path+="/redis.conf"
-printf 'Your redis-conf -> %s\n' $redis_path
 
 # running Redis Server Process.
-redis-server $redis_path &
+redis-server &
 
