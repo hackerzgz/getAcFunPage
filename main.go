@@ -123,7 +123,7 @@ func GetPageAndJSON() (pageJSON string) {
 	}
 
 	// Get PageList base on keys.
-	var pageList []PageSave.IndexItem = make([]PageSave.IndexItem, 9)
+	var pageList []PageSave.IndexItem = make([]PageSave.IndexItem, len(keys))
 	for k, v := range keys {
 		pifr, err := PageSave.Hgetall(v)
 		if err != nil {

@@ -18,20 +18,18 @@ var (
 func initRedis(host string) *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:     64,
-		IdleTimeout: 60 * time.Second,
-		TestOnBorrow: func(c redis.Conn, t time.Time) error {
-			_, err := c.Do("PING")
+		IdleTimeout: 3 * time.Second,
+		MaxActive:   99999, // max number of connections
+		// TestOnBorrow: func(c redis.Conn, t time.Time) error {
+		// 	_, err := c.Do("PING")
 
-			return err
-		},
+		// 	return err
+		// },
 		Dial: func() (redis.Conn, error) {
 			c, err := redis.Dial("tcp", host)
 			if err != nil {
 				return nil, err
 			}
-
-			// _, err = c.Do("SELECT", RedisDB)
-
 			return c, err
 		},
 	}
