@@ -30,18 +30,19 @@ go run main.go
 1. I make a big mistake when I declare some variable in struct IndexItem use begin with lowercase, That was suck! When I use goson to reflex IndexItem to JSON, Golang throw out **"reflect.Value.Interface: cannot return value obtained from unexported field or method"** error. It kill me a lot of time to change uppercase in every file.
 
 2. **Same struct** must be a package to import OR It will show you:
-
-> cannot use pageList (type []IndexItem) as type []PageSave.IndexItem in argument...
+```
+cannot use pageList (type []IndexItem) as type []PageSave.IndexItem in argument...
+```
 
 3. **References to static files** is based on the relative path calls the function file.
 
 4. Now here is a problem which `HandleGetResp()` will call twice time in Brower. But in `curl http://localhost:9000` ,it call only once.
-
-> Just log the requests. You will realize that your browser also requests /favicon.ico.
-> See https://en.wikipedia.org/wiki/Favicon for more information.
+```
+Just log the requests. You will realize that your browser also requests /favicon.ico.
+See https://en.wikipedia.org/wiki/Favicon for more information.
+```
 
 5. Golang panic error : 
-
 ```shell
 http: panic serving 127.0.0.1:53512: dial tcp :6379: socket: too many open files
 goroutine 5322 [running]:
