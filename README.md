@@ -47,3 +47,9 @@ go run main.go
 
 [Demo](http://123.207.0.81:9001/)
 
+## Banmark
+
+![WebBench -c 1000 -t 15](https://www.github.com/HackeZ/getAcFunPage/doc/)
+
+WebBench -c 1000 -t 15
+
