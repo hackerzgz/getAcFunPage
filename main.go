@@ -59,6 +59,8 @@ func main() {
 				wg.Add(1)
 				// wg.Done() when GetPageAndSave() Done
 				GetPageAndSave()
+				json := GetPageAndJSON()
+				SaveTodayJSON(json)
 				savePageTime.Reset(30 * time.Minute)
 			}
 		}
@@ -79,7 +81,7 @@ func main() {
  * Handle Get Response And Return JSON.
  */
 func HandleGetResp(rw http.ResponseWriter, req *http.Request) {
-	io.WriteString(rw, GetPageAndJSON())
+	io.WriteString(rw, GetTodayJSON())
 }
 
 /* GetPageAndSave
@@ -107,8 +109,6 @@ func GetPageAndSave() {
 
 	fmt.Println("=== Save Page Info 2 Redis Done ===")
 
-	// Save Page Info Done, Make Response available.
-	wg.Done()
 }
 
 /* GetPageAndJSON
@@ -139,6 +139,32 @@ func GetPageAndJSON() (pageJSON string) {
 		panic(err)
 	}
 	fmt.Println("=== JSON Trans Done ===")
+	return
+}
+
+/* SaveTodayJSON Save JSON to Redis
+ * @param	json
+ */
+func SaveTodayJSON(json string) {
+	err := PageSave.Set("ac_JSON", json)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("=== Save ac_JSON Success ===")
+	// Save Page Info Done, Make Response available.
+	wg.Done()
+}
+
+/* SaveTodayJSON Save JSON to Redis
+ * @return	json
+ */
+func GetTodayJSON() (json string) {
+	json, err := PageSave.Get("ac_JSON")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("=== Return JSON Success ===")
 	return
 }
 

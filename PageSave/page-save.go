@@ -126,3 +126,37 @@ func Hgetall(pageId string) (IndexItem, error) {
 	indexItem.Dataid = utils.AcIdToPageId(pageId)
 	return indexItem, nil
 }
+
+/* Set use SET to Save JSON to ac_JSON
+ * @param	ac_JSON
+ * @return	error
+ */
+func Set(key, json string) error {
+	GetRedisClient()
+	rc := RedisClient.Get()
+	defer rc.Close()
+
+	// set json to key --> ac_JSON
+	_, err := rc.Do("SET", key, json)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+/* Get use GET to Return result from key
+ * @param	key
+ * @return	JSON, error
+ */
+func Get(key string) (json string, err error) {
+	GetRedisClient()
+	rc := RedisClient.Get()
+	defer rc.Close()
+
+	// get JSON from key --> ac_JSON
+	json, err = redis.String(rc.Do("GET", key))
+	if err != nil {
+		return "", err
+	}
+	return json, nil
+}
