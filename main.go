@@ -70,19 +70,45 @@ func main() {
 	wg.Wait()
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", HandleGetResp)
+	mux.HandleFunc("/", HandleTodayGetResp)
+	mux.HandleFunc("/data", HandleDataGetResp)
 	// solve brower requset favicon problem.
 	mux.HandleFunc("/favicon.ico", func(rw http.ResponseWriter, req *http.Request) {})
 	http.ListenAndServe(":9001", mux)
 
 }
 
-/* HandleGetResp
- * Handle Get Response And Return JSON.
+/* HandleTodayGetResp
+ * Handle Today Get Response And Return JSON.
  */
-func HandleGetResp(rw http.ResponseWriter, req *http.Request) {
-	io.WriteString(rw, GetTodayJSON())
+func HandleTodayGetResp(rw http.ResponseWriter, req *http.Request) {
+	if req.Method != "GET" {
+		
+	} else {
+		fmt.Printf("=== This is <%s> Request ===", req.RemoteAddr)
+		io.WriteString(rw, GetTodayJSON())
+	}
 }
+
+/* HandleDataGetResp
+ * Handle Today Get Response And Return JSON.
+ */
+func HandleDataGetResp(rw http.ResponseWriter, req *http.Request) {
+	if req.Method != "GET" {
+		
+	} else {
+		/*
+		 * req.ParseForm() is import!
+		 * http://it.taocms.org/01/6527.htm
+		 */
+		req.ParseForm()
+		fmt.Printf("=== This is <%s> Request ===", req.RemoteAddr)
+		dataValue := req.FormValue("data")
+		io.WriteString(rw, dataValue)
+		// io.WriteString(rw, GetTodayJSON())
+	}
+}
+
 
 /* GetPageAndSave
  * Get AcFun Page And Save them into Redis.
@@ -117,7 +143,7 @@ func GetPageAndSave() {
  */
 func GetPageAndJSON() (pageJSON string) {
 	// Get Page Info from Redis.
-	keys, err := PageSave.Keys("ac*")
+	keys, err := PageSave.Keys("ac29*")
 	if err != nil {
 		panic(err)
 	}
@@ -146,7 +172,8 @@ func GetPageAndJSON() (pageJSON string) {
  * @param	json
  */
 func SaveTodayJSON(json string) {
-	err := PageSave.Set("ac_JSON", json)
+	dataFormat := time.Now().Format("2006-01-02")
+	err := PageSave.Set("ac_JSON-"+dataFormat, json)
 	if err != nil {
 		panic(err)
 	}
@@ -159,7 +186,8 @@ func SaveTodayJSON(json string) {
  * @return	json
  */
 func GetTodayJSON() (json string) {
-	json, err := PageSave.Get("ac_JSON")
+	dataFormat := time.Now().Format("2006-01-02")
+	json, err := PageSave.Get("ac_JSON-"+dataFormat)
 	if err != nil {
 		panic(err)
 	}
