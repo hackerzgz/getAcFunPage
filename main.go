@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"regexp"
 	"sync"
@@ -11,6 +11,8 @@ import (
 
 	PageInfo "getAcFunPage/PageInfo"
 	PageSave "getAcFunPage/PageSave"
+
+	"github.com/bmizerany/pat"
 )
 
 // Author: HackerZ
@@ -23,6 +25,7 @@ import (
 var (
 	acfunPageRoot = "http://www.acfun.tv/v/list110/index.htm"
 	ptnIndexItem  = regexp.MustCompile(`<div class="item "><a href="(/a/ac[0-9]{7,})" target="_blank" data-aid="([0-9]{7,})" title="(.{10,35})" class="title">.{10,35}</a></div>`)
+	DF            = `[0-9]{4,}-[0-9]{2,}-[0-9]{2,}`
 	wg            sync.WaitGroup
 )
 
@@ -69,12 +72,17 @@ func main() {
 	// Wait for GetPageAndSave() Done.
 	wg.Wait()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", HandleTodayGetResp)
-	mux.HandleFunc("/data", HandleDataGetResp)
-	// solve brower requset favicon problem.
-	mux.HandleFunc("/favicon.ico", func(rw http.ResponseWriter, req *http.Request) {})
-	http.ListenAndServe(":9001", mux)
+	mux := pat.New()
+	mux.Get("/", http.HandlerFunc(HandleTodayGetResp))
+
+	mux.Get("/data/:data", http.HandlerFunc(HandleDataGetResp))
+	mux.Get("/favicon.ico", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {}))
+
+	http.Handle("/", mux)
+	err := http.ListenAndServe(":9001", nil)
+	if err != nil {
+		log.Fatal("ListenAndServe --> ", err)
+	}
 
 }
 
@@ -82,58 +90,52 @@ func main() {
  * Handle Today Get Response And Return JSON.
  */
 func HandleTodayGetResp(rw http.ResponseWriter, req *http.Request) {
-	if req.Method != "GET" {
-		
-	} else {
-		fmt.Printf("=== This is <%s> Request ===", req.RemoteAddr)
-		io.WriteString(rw, GetTodayJSON())
-	}
+	log.Printf("=== This is <%s> Request ===\n", req.RemoteAddr)
+	io.WriteString(rw, GetTodayJSON())
 }
 
 /* HandleDataGetResp
  * Handle Today Get Response And Return JSON.
  */
 func HandleDataGetResp(rw http.ResponseWriter, req *http.Request) {
-	if req.Method != "GET" {
-		
-	} else {
-		/*
-		 * req.ParseForm() is import!
-		 * http://it.taocms.org/01/6527.htm
-		 */
-		req.ParseForm()
-		fmt.Printf("=== This is <%s> Request ===", req.RemoteAddr)
-		dataValue := req.FormValue("data")
-		io.WriteString(rw, dataValue)
-		// io.WriteString(rw, GetTodayJSON())
+	log.Printf("=== This is <%s> Request ===\n", req.RemoteAddr)
+	output := "404"
+	dataValue := req.URL.Query().Get(":data")
+	boolDF, err := regexp.MatchString(DF, dataValue)
+	if err != nil {
+		log.Fatal("data format error -->", err)
+		panic(err)
 	}
+	if boolDF {
+		output = GetTodayJSON()
+	}
+	io.WriteString(rw, output)
 }
-
 
 /* GetPageAndSave
  * Get AcFun Page And Save them into Redis.
  */
 func GetPageAndSave() {
 	// Get url Content.
-	fmt.Println("=== Get Index... ===")
+	log.Println("=== Get Index... ===")
 	raw, statusCode := GetPageContent(acfunPageRoot)
-	fmt.Println("statusCode --> ", statusCode)
+	log.Println("statusCode --> ", statusCode)
 	if statusCode != "200 OK" {
-		fmt.Println("err --> False to Get Web Content.Please Check out Your URL!")
+		log.Println("err --> False to Get Web Content.Please Check out Your URL!")
 		return
 	}
 
 	// Find IndexItem.
 	index, _ := FindIndexItem(raw)
 
-	fmt.Println("=== IndexItem Match Done ===")
+	log.Println("=== IndexItem Match Done ===")
 
 	// Save Page Info to Redis.
 	for _, item := range index {
 		PageSave.HMset("ac"+item.Pageinfo.PageID, item.Title, item.Url, item.Pageinfo.Onlooker, item.Pageinfo.Comments, item.Pageinfo.Banana)
 	}
 
-	fmt.Println("=== Save Page Info 2 Redis Done ===")
+	log.Println("=== Save Page Info 2 Redis Done ===")
 
 }
 
@@ -157,14 +159,14 @@ func GetPageAndJSON() (pageJSON string) {
 		}
 		pageList[k] = pifr
 	}
-	fmt.Println("=== Get PageList Done ===")
+	log.Println("=== Get PageList Done ===")
 
 	// Make Pages trans to JSON.
 	pageJSON, err = PageSave.Page2JSON(pageList, "./ac_pages")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("=== JSON Trans Done ===")
+	log.Println("=== JSON Trans Done ===")
 	return
 }
 
@@ -177,7 +179,7 @@ func SaveTodayJSON(json string) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("=== Save ac_JSON Success ===")
+	log.Println("=== Save ac_JSON Success ===")
 	// Save Page Info Done, Make Response available.
 	wg.Done()
 }
@@ -187,12 +189,12 @@ func SaveTodayJSON(json string) {
  */
 func GetTodayJSON() (json string) {
 	dataFormat := time.Now().Format("2006-01-02")
-	json, err := PageSave.Get("ac_JSON-"+dataFormat)
+	json, err := PageSave.Get("ac_JSON-" + dataFormat)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("=== Return JSON Success ===")
+	log.Println("=== Return JSON Success ===")
 	return
 }
 
@@ -205,7 +207,7 @@ func GetPageContent(url string) (content, statusCode string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		statusCode = "-1"
-		fmt.Println("Get The \"Hottest\" Page Error --> ", err.Error())
+		log.Println("Get The \"Hottest\" Page Error --> ", err.Error())
 		return
 	}
 	defer resp.Body.Close()
@@ -213,7 +215,7 @@ func GetPageContent(url string) (content, statusCode string) {
 	bys, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		statusCode = "-2"
-		fmt.Println("Get The \"Hottest\" Page Error --> ", err.Error())
+		log.Println("Get The \"Hottest\" Page Error --> ", err.Error())
 		return
 	}
 	statusCode = resp.Status

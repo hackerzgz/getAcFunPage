@@ -14,6 +14,7 @@ go test getAcFunPage/PageSave
 ## Dependence
 ```shell
 $ go get github.com/emilsjolander/goson
+$ go get github.com/bmizerany/pat
 ```
 
 ## Usage
