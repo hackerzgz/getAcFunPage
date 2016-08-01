@@ -91,7 +91,7 @@ This Problem Slove When you set `ulimit -n 99999` .
 === JSON Trans Done ===
 === JSON Trans Done ===
 ```
-It show that the Efficiency of JSON Trans were so low. Maybe I should add Cache!
+It show that the Efficiency of JSON Trans were so low. So I Cache PageList JSON to Redis too.
 
 ## Benchmark
 

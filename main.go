@@ -107,7 +107,7 @@ func HandleDataGetResp(rw http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 	if boolDF {
-		output = GetTodayJSON()
+		output = GetDataJSON(dataValue)
 	}
 	io.WriteString(rw, output)
 }
@@ -184,7 +184,7 @@ func SaveTodayJSON(json string) {
 	wg.Done()
 }
 
-/* SaveTodayJSON Save JSON to Redis
+/* GetTodayJSON Get Today JSON from Redis
  * @return	json
  */
 func GetTodayJSON() (json string) {
@@ -192,6 +192,21 @@ func GetTodayJSON() (json string) {
 	json, err := PageSave.Get("ac_JSON-" + dataFormat)
 	if err != nil {
 		panic(err)
+	}
+
+	log.Println("=== Return JSON Success ===")
+	return
+}
+
+/* GetDataJSON Get Data JSON from Redis
+ * @param	data
+ * @return	JSON
+ */
+func GetDataJSON(data string) (json string) {
+	json, err := PageSave.Get("ac_JSON-" + data)
+	if err != nil {
+		json = "Have No this Data PageList."
+		log.Println("=== Return JSON Failed ===")
 	}
 
 	log.Println("=== Return JSON Success ===")
