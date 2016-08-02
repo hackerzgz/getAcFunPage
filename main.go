@@ -79,7 +79,13 @@ func main() {
 	mux.Get("/favicon.ico", http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {}))
 
 	http.Handle("/", mux)
-	err := http.ListenAndServe(":9001", nil)
+	srv := &http.Server{
+		Addr:         ":9001",
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 5 * time.Second,
+	}
+	err := srv.ListenAndServe()
+	// err := http.ListenAndServe(":9001", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe --> ", err)
 	}
