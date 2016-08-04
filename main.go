@@ -170,52 +170,10 @@ func GetPageAndJSON() (pageJSON string) {
 	// Make Pages trans to JSON.
 	pageJSON, err = PageSave.Page2JSON(pageList, "./ac_pages")
 	if err != nil {
-		panic(err)
+		log.Println("Page2JSON error -->", err)
+		return ""
 	}
 	log.Println("=== JSON Trans Done ===")
-	return
-}
-
-/* SaveTodayJSON Save JSON to Redis
- * @param	json
- */
-func SaveTodayJSON(json string) {
-	dataFormat := time.Now().Format("2006-01-02")
-	err := PageSave.Set("ac_JSON-"+dataFormat, json)
-	if err != nil {
-		panic(err)
-	}
-	log.Println("=== Save ac_JSON Success ===")
-	// Save Page Info Done, Make Response available.
-	wg.Done()
-}
-
-/* GetTodayJSON Get Today JSON from Redis
- * @return	json
- */
-func GetTodayJSON() (json string) {
-	dataFormat := time.Now().Format("2006-01-02")
-	json, err := PageSave.Get("ac_JSON-" + dataFormat)
-	if err != nil {
-		panic(err)
-	}
-
-	log.Println("=== Return JSON Success ===")
-	return
-}
-
-/* GetDataJSON Get Data JSON from Redis
- * @param	data
- * @return	JSON
- */
-func GetDataJSON(data string) (json string) {
-	json, err := PageSave.Get("ac_JSON-" + data)
-	if err != nil {
-		json = "Have No this Data PageList."
-		log.Println("=== Return JSON Failed ===")
-	}
-
-	log.Println("=== Return JSON Success ===")
 	return
 }
 
@@ -257,5 +215,53 @@ func FindIndexItem(content string) (index []IndexItem, err error) {
 		pageInfo := PageInfo.GetPageInfo(item[1])
 		index[i] = IndexItem{"http://www.acfun.tv" + item[1], item[3], item[2], pageInfo}
 	}
+	return
+}
+
+/* SaveTodayJSON Save JSON to Redis
+ * @param	json
+ */
+func SaveTodayJSON(json string) {
+	if json == "" {
+		log.Println("=== Save ac_JSON False json is Empty ===")
+	} else {
+		dataFormat := time.Now().Format("2006-01-02")
+		err := PageSave.Set("ac_JSON-"+dataFormat, json)
+		if err != nil {
+			panic(err)
+		}
+		log.Println("=== Save ac_JSON Success ===")
+	}
+
+	// Save Page Info Done, Make Response available.
+	wg.Done()
+}
+
+/* GetTodayJSON Get Today JSON from Redis
+ * @return	json
+ */
+func GetTodayJSON() (json string) {
+	dataFormat := time.Now().Format("2006-01-02")
+	json, err := PageSave.Get("ac_JSON-" + dataFormat)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println("=== Return JSON Success ===")
+	return
+}
+
+/* GetDataJSON Get Data JSON from Redis
+ * @param	data
+ * @return	JSON
+ */
+func GetDataJSON(data string) (json string) {
+	json, err := PageSave.Get("ac_JSON-" + data)
+	if err != nil {
+		json = "Have No this Data PageList."
+		log.Println("=== Return JSON Failed ===")
+	}
+
+	log.Println("=== Return JSON Success ===")
 	return
 }

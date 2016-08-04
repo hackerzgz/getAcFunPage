@@ -38,6 +38,12 @@ func GetPageInfo(pageID string) PageInfo {
 	raw, statusCode := getPageInfo(acfunContentView + "contentId=" + pageID + "&channelId=110")
 	if statusCode != "200 OK" {
 		fmt.Printf("Get %s PageInfo Error.\n", pageID)
+		return PageInfo{
+			PageID:   pageID,
+			Onlooker: -1,
+			Banana:   -1,
+			Comments: -1,
+		}
 	}
 
 	// Matching PageInfo.

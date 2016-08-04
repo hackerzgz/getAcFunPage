@@ -93,6 +93,14 @@ This Problem Slove When you set `ulimit -n 99999` .
 ```
 It show that the Efficiency of JSON Trans were so low. So I Cache PageList JSON to Redis too.
 
+7. Acfun `404` when GetPageInfo() not Finish. It throw
+```shell
+2016/08/02 16:38:01 statusCode -->  200 OK
+Get 2952333 PageInfo Error.
+panic: runtime error: index out of range
+```
+So I return `-1` when Acfun was `404`.
+
 ## Benchmark
 
 + System   : CentOS 7.0 64bit
