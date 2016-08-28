@@ -151,7 +151,7 @@ func GetPageAndSave() {
  */
 func GetPageAndJSON() (pageJSON string) {
 	// Get Page Info from Redis.
-	keys, err := PageSave.Keys("ac29*")
+	keys, err := PageSave.Keys("ac[0-9]*")
 	if err != nil {
 		panic(err)
 	}
