@@ -37,7 +37,6 @@ type IndexItem struct {
  * @return 	size_length, error
  */
 func HMset(pageId, title, url string, onLooker, comments, banana int64) (string, error) {
-	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
 
@@ -60,7 +59,6 @@ func HMset(pageId, title, url string, onLooker, comments, banana int64) (string,
 func Hdel(pageId string) (int64, error) {
 	sub_key := []string{"title", "url", "onLooker", "comments", "banana"}
 
-	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
 
@@ -80,7 +78,6 @@ func Hdel(pageId string) (int64, error) {
  * @return 	pageId_index, err
  */
 func Keys(keys_arg string) ([]string, error) {
-	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
 
@@ -96,7 +93,6 @@ func Keys(keys_arg string) ([]string, error) {
  * @return 	IndexItem, err
  */
 func Hgetall(pageId string) (IndexItem, error) {
-	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
 
@@ -132,7 +128,6 @@ func Hgetall(pageId string) (IndexItem, error) {
  * @return	error
  */
 func Set(key, json string) error {
-	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
 
@@ -149,7 +144,6 @@ func Set(key, json string) error {
  * @return	JSON, error
  */
 func Get(key string) (json string, err error) {
-	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
 

@@ -24,7 +24,7 @@ func TestPage2JSON(t *testing.T) {
 		t.Errorf("Page2JSON error --> %s", err.Error())
 	}
 
-	if result != "{\"page\":{\"page-id\":\"2907308\",\"url\":\"http://www.testing2JSON.com/a/ac2907308\",\"title\":\"Testing2JSON\",\"onlooker\":25781,\"comments\":524,\"banana\":2}}" {
+	if result != "{\"page\":{\"page-id\":\"2907308\",\"url\":\"http://www.testing2JSON.com/a/ac2907308\",\"title\":\"Testing2JSON\",\"ac-id\":\"2907308\",\"onlooker\":25781,\"comments\":524,\"banana\":2}}" {
 		t.Error("Page2JSON not Complete --> ", result)
 	}
 }

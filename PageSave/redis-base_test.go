@@ -10,7 +10,6 @@ import (
 func TestPageSave(t *testing.T) {
 	fmt.Println("=== Testing Redis Start ===")
 
-	GetRedisClient()
 	rc := RedisClient.Get()
 	defer rc.Close()
 

@@ -2,7 +2,7 @@ page: {
     page-id: IndexItem.Dataid
     url: IndexItem.Url
     title: IndexItem.Title
-    ac-id: page.Pageinfo.PageID
+    ac-id: IndexItem.Dataid
     onlooker: IndexItem.Pageinfo.Onlooker
     comments: IndexItem.Pageinfo.Comments
     banana: IndexItem.Pageinfo.Banana
